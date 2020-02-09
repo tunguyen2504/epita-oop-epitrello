@@ -91,7 +91,6 @@ public class DataService {
 		task.setEstimatedTime(estimatedTime);
 		task.setPriority(priority);
 		task.setDescription(description);
-		tasks.put(name, task);
 
 		if (tasks.containsKey(name) && tasks.get(name) == task) {
 			return SUCCESS;
@@ -122,5 +121,83 @@ public class DataService {
 			return FAILED;
 		}
 	}
+
+    public String printTask(String taskName) {
+        if (!tasks.containsKey(taskName)) {
+            return TASK_NOT_EXISTED;
+        }
+
+        Task task = tasks.get(taskName);
+
+        String[] assignee = { null };
+
+        users.forEach((name, u) -> {
+            if (u.getAssignedTask().contains(task)) {
+                assignee[0] = u.getName();
+            }
+            ;
+        });
+
+        System.out.println("Task priority: " + task.getPriority());
+        System.out.println("Task description: " + task.getDescription());
+        System.out.println("Task estimated time: " + task.getEstimatedTime());
+        return task.getName() + "\n" + task.getDescription() + "\nPriority: " + task.getPriority()
+                + "\nEstimated Time: " + task.getEstimatedTime()
+                + (task.isCompleted() ? "\nTask is completed" : "\nTask is not completed") + "\nAssigned to "
+                + assignee[0];
+    }
+
+    public String completeTask(String taskName) {
+        if (!tasks.containsKey(taskName)) {
+            return TASK_NOT_EXISTED;
+        }
+
+        if (tasks.get(taskName).isCompleted()) {
+            return "Task is already completed!";
+        }
+
+        Task task = tasks.get(taskName);
+        task.setCompleted(true);
+
+        if (task.isCompleted() && tasks.get(taskName).isCompleted()) {
+            return SUCCESS;
+        } else {
+            return FAILED;
+        }
+    }
+
+    public String moveTask(String taskName, String listName) {
+        if (!tasks.containsKey(taskName)) {
+            return TASK_NOT_EXISTED;
+        }
+
+        if (!taskLists.containsKey(listName)) {
+            return LIST_NOT_EXISTED;
+        }
+
+        Task task = tasks.get(taskName);
+        TaskList[] oldList = { null };
+        TaskList newList = taskLists.get(listName);
+        taskLists.forEach((name, list) -> {
+            if (list.getTasksInList().contains(task)) {
+                oldList[0] = list;
+            }
+        });
+        
+        List<Task> tasksInNewList = newList.getTasksInList();
+        tasksInNewList.add(task);
+        newList.setTasksInList(tasksInNewList);
+        
+        List<Task> tasksInOldList = oldList[0].getTasksInList();
+        tasksInOldList.remove(task);
+        oldList[0].setTasksInList(tasksInOldList);
+        
+        if (!oldList[0].getTasksInList().contains(task) && newList.getTasksInList().contains(task)) {
+            return SUCCESS;
+        } else {
+            return FAILED;
+        }
+    }
+
 	
 }

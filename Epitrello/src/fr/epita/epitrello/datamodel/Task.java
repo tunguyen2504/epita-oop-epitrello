@@ -7,6 +7,7 @@ public class Task {
 	private String description;
 	private int estimatedTime;
 	private int priority;
+	private boolean isCompleted = false;
 
 	public Task() {
 		
@@ -57,6 +58,14 @@ public class Task {
 
 	public void setPriority(int priority) {
 		this.priority = priority;
+	}
+
+	public boolean isCompleted() {
+		return isCompleted;
+	}
+
+	public void setCompleted(boolean isCompleted) {
+		this.isCompleted = isCompleted;
 	}
 
 }
