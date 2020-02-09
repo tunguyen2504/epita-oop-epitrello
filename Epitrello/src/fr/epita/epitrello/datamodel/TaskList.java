@@ -3,17 +3,17 @@ package fr.epita.epitrello.datamodel;
 import java.util.ArrayList;
 import java.util.List;
 
-public class User {
+public class TaskList {
 
 	private int id;
 	private String name;
-	private List<Task> assignedTask = new ArrayList<Task>();
-	
-	public User() {
-		
+	private List<Task> tasksInList = new ArrayList<Task>();
+
+	public TaskList() {
+
 	}
-	
-	public User(String name) {
+
+	public TaskList(String name) {
 		this.name = name;
 	}
 
@@ -33,12 +33,12 @@ public class User {
 		this.name = name;
 	}
 
-	public List<Task> getAssignedTask() {
-		return assignedTask;
+	public List<Task> getTasksInList() {
+		return tasksInList;
 	}
 
-	public void setAssignedTask(List<Task> assignedTask) {
-		this.assignedTask = assignedTask;
+	public void setTasksInList(List<Task> tasksInList) {
+		this.tasksInList = tasksInList;
 	}
 
 }

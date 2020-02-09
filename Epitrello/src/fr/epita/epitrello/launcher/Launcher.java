@@ -6,22 +6,28 @@ public class Launcher {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		DataService dataservice;
+		DataService dataservice = new DataService();
 
-//		System.out.println( dataservice.addUser("Thomas") ); // addUser(string username)
-//		System.out.println( dataservice.addUser("AmirAli") );
-//		System.out.println( dataservice.addUser("Rabih") );
-//
-//		System.out.println( dataservice.addList("Code") ); //addList(string name)
-//		System.out.println( dataservice.addList("Description") );
-//		System.out.println( dataservice.addList("Misc") );
-//
-//	    System.out.println( dataservice.addTask("Code", "Do Everything", 12, 1, "Write the whole code") ); 
-//	    /* addTask(string list, string name, unsigned int estimatedTime, unsigned int priority, string description) */
-//	    System.out.println( dataservice.editTask("Do Everything", 12, 10, "Write the whole code") );
-//	    /* editTask(string task, unsigned int estimatedTime, unsigned int priority, string description) */
-//
-//	    System.out.println( dataservice.assignTask("Do Everything", "Rabih") ); // assignTask(string task, string user)
+		System.out.println(dataservice.addUser("Thomas")); // addUser(string username)
+		System.out.println(dataservice.addUser("AmirAli"));
+		System.out.println(dataservice.addUser("Rabih"));
+
+		System.out.println(dataservice.addList("Code")); // addList(string name)
+		System.out.println(dataservice.addList("Description"));
+		System.out.println(dataservice.addList("Misc"));
+
+		System.out.println(dataservice.addTask("Code", "Do Everything", 12, 1, "Write the whole code"));
+		/*
+		 * addTask(string list, string name, unsigned int estimatedTime, unsigned int
+		 * priority, string description)
+		 */
+		System.out.println(dataservice.editTask("Do Everything", 12, 10, "Write the whole code"));
+		/*
+		 * editTask(string task, unsigned int estimatedTime, unsigned int priority,
+		 * string description)
+		 */
+
+		System.out.println(dataservice.assignTask("Do Everything", "Rabih")); // assignTask(string task, string user)
 //	    System.out.println( dataservice.printTask("Do Everything") ); // printTask(string task)
 //
 //	    System.out.println( dataservice.addTask("Code", "Destroy code formatting", 1, 2, "Rewrite the whole code in a worse format") );
@@ -53,8 +59,8 @@ public class Launcher {
 //
 //	    System.out.println( dataservice.printAllUnfinishedTasksByPriority() );
 
-	    //TODO Write all the prints into a file.
-	    //TODO Save users in a db.
+		// TODO Write all the prints into a file.
+		// TODO Save users in a db.
 	}
 
 }
