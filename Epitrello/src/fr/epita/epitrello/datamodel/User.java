@@ -7,6 +7,7 @@ public class User {
 
 	private int id;
 	private String name;
+	private int totalEstimatedTime;
 	private List<Task> assignedTask = new ArrayList<Task>();
 	
 	public User() {
@@ -31,6 +32,14 @@ public class User {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public int getTotalEstimatedTime() {
+		return totalEstimatedTime;
+	}
+
+	public void setTotalEstimatedTime(int totalEstimatedTime) {
+		this.totalEstimatedTime = totalEstimatedTime;
 	}
 
 	public List<Task> getAssignedTask() {

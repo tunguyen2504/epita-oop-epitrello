@@ -8,6 +8,7 @@ public class Task {
 	private int estimatedTime;
 	private int priority;
 	private boolean isCompleted = false;
+	private boolean isAssigned = false;
 
 	public Task() {
 		
@@ -66,6 +67,14 @@ public class Task {
 
 	public void setCompleted(boolean isCompleted) {
 		this.isCompleted = isCompleted;
+	}
+
+	public boolean isAssigned() {
+		return isAssigned;
+	}
+
+	public void setAssigned(boolean isAssigned) {
+		this.isAssigned = isAssigned;
 	}
 
 }
