@@ -1,5 +1,9 @@
 package fr.epita.epitrello.datamodel;
 
+/**
+ * @author Anh Tu NGUYEN & Thanh Tung TRINH - Group 2
+ *
+ */
 public class List {
 	
 	private int id;

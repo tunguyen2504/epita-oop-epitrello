@@ -10,6 +10,10 @@ import fr.epita.epitrello.datamodel.Task;
 import fr.epita.epitrello.datamodel.TaskList;
 import fr.epita.epitrello.datamodel.User;
 
+/**
+ * @author Anh Tu NGUYEN & Thanh Tung TRINH - Group 2
+ *
+ */
 public class DataService {
 
 	private static final String SUCCESS = "Success";
@@ -27,19 +31,28 @@ public class DataService {
 	private static Map<String, TaskList> taskLists = new LinkedHashMap<String, TaskList>();
 	private static Map<String, User> users = new LinkedHashMap<String, User>();
 
+	private static UserJDBCDAO userJdbcDao = new UserJDBCDAO();
+
 	public DataService() {
 
 	}
 
 	public String addUser(String name) {
-		if (users.containsKey(name)) {
+		if (userJdbcDao.isUserExists(name)) {
+			for (User u : userJdbcDao.getAllUser()) {
+				users.putIfAbsent(u.getName(), u);
+			}
+			;
 			return USER_EXISTED;
 		}
+		;
 
 		User user = new User(name);
-		users.put(name, user);
-
-		if (users.containsKey(name)) {
+		if (userJdbcDao.createUser(user) != 0 && userJdbcDao.isUserExists(name)) {
+			for (User u : userJdbcDao.getAllUser()) {
+				users.putIfAbsent(u.getName(), u);
+			}
+			;
 			return SUCCESS;
 		} else {
 			return FAILED;
@@ -108,7 +121,7 @@ public class DataService {
 			return TASK_NOT_EXISTED;
 		}
 
-		if (!users.containsKey(userName)) {
+		if (!userJdbcDao.isUserExists(userName)) {
 			return USER_NOT_EXISTED;
 		}
 
@@ -118,12 +131,12 @@ public class DataService {
 		}
 
 		User user = users.get(userName);
-		List<Task> assignedTask = user.getAssignedTask();
+		List<Task> assignedTasks = user.getAssignedTask();
 		task.setAssigned(true);
-		assignedTask.add(task);
-		user.setAssignedTask(assignedTask);
+		assignedTasks.add(task);
+		user.setAssignedTask(assignedTasks);
 
-		if (users.get(userName).getAssignedTask().contains(task)) {
+		if (user.getAssignedTask().contains(task)) {
 			return SUCCESS;
 		} else {
 			return FAILED;
@@ -147,7 +160,6 @@ public class DataService {
 
 		return task.getName() + "\n" + task.getDescription() + "\nPriority: " + task.getPriority()
 				+ "\nEstimated Time: " + task.getEstimatedTime()
-				+ (task.isCompleted() ? "\nTask is completed" : "\nTask is not completed")
 				+ (assignee != null ? "\nAssigned to " + assignee : "\nUnassigned") + "\n";
 	}
 
@@ -283,9 +295,9 @@ public class DataService {
 	public String printTotalEstimatedTime() {
 		String results = "Total estimated time";
 		for (User user : users.values()) {
-			List<Task> assignedTask = user.getAssignedTask();
+			List<Task> assignedTasks = user.getAssignedTask();
 			int totalEstimatedTime = 0;
-			for (Task task : assignedTask) {
+			for (Task task : assignedTasks) {
 				totalEstimatedTime += task.getEstimatedTime();
 			}
 			results += "\n" + user.getName() + ": " + totalEstimatedTime + "h";
@@ -296,9 +308,9 @@ public class DataService {
 	public String printTotalRemainingTime() {
 		String results = "Total remaining time";
 		for (User user : users.values()) {
-			List<Task> assignedTask = user.getAssignedTask();
+			List<Task> assignedTasks = user.getAssignedTask();
 			int totalEstimatedTime = 0;
-			for (Task task : assignedTask) {
+			for (Task task : assignedTasks) {
 				if (!task.isCompleted()) {
 					totalEstimatedTime += task.getEstimatedTime();
 				}
@@ -308,17 +320,25 @@ public class DataService {
 		return !results.equals("") ? results : NO_RESULT;
 	}
 
-//	public String userWorkLoad(String userName) {
-//		
-//	}
+	public String userWorkLoad(String userName) {
+		String results = "";
+		User user = users.get(userName);
+		List<Task> assignedTasks = user.getAssignedTask();
+		int totalEstimatedTime = 0;
+		for (Task task : assignedTasks) {
+			totalEstimatedTime += task.getEstimatedTime();
+		}
+		results = user.getName() + ": " + totalEstimatedTime + "h\n";
+		return results;
+	}
 
 	public String printUsersByPerformance() {
 		String results = "";
 		List<User> userList = new ArrayList<User>();
 		for (User user : users.values()) {
-			List<Task> assignedTask = user.getAssignedTask();
+			List<Task> assignedTasks = user.getAssignedTask();
 			int totalEstimatedTime = 0;
-			for (Task task : assignedTask) {
+			for (Task task : assignedTasks) {
 				if (!task.isCompleted()) {
 					totalEstimatedTime += task.getEstimatedTime();
 				}
@@ -337,9 +357,9 @@ public class DataService {
 		String results = "";
 		List<User> userList = new ArrayList<User>();
 		for (User user : users.values()) {
-			List<Task> assignedTask = user.getAssignedTask();
+			List<Task> assignedTasks = user.getAssignedTask();
 			int totalEstimatedTime = 0;
-			for (Task task : assignedTask) {
+			for (Task task : assignedTasks) {
 				totalEstimatedTime += task.getEstimatedTime();
 			}
 			user.setTotalEstimatedTime(totalEstimatedTime);

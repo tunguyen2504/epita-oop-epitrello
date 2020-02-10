@@ -3,6 +3,10 @@ package fr.epita.epitrello.datamodel;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author Anh Tu NGUYEN & Thanh Tung TRINH - Group 2
+ *
+ */
 public class TaskList {
 
 	private int id;
