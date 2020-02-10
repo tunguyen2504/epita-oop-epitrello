@@ -63,6 +63,7 @@ public class DataService {
 
 		User user = new User(name);
 		if (userJdbcDao.createUser(user) != 0 && userJdbcDao.isUserExists(name)) {
+			// To store all user in the table USER to hashmap
 			for (User u : userJdbcDao.getAllUser()) {
 				users.putIfAbsent(u.getName(), u);
 			}
