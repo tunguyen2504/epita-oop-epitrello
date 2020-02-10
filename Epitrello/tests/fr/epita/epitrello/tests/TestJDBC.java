@@ -18,8 +18,7 @@ public class TestJDBC {
 		testSearch();
 	}
 	
-	private static void testSearch() throws SQLException {
-		Connection connection = getConnection();
+	private static void testSearch() {
 		UserJDBCDAO dao = new UserJDBCDAO();
 		boolean isUserExists = dao.isUserExists("Anh Tu");
 		System.out.println(isUserExists);
@@ -58,8 +57,7 @@ public class TestJDBC {
 		String user = "admin";
 		String password = "admin";
 
-		Connection connection = DriverManager.getConnection(url, user, password);
-		return connection;
+		return DriverManager.getConnection(url, user, password);
 	}
 	
 }

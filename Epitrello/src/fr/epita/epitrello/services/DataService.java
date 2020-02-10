@@ -30,15 +30,15 @@ public class DataService {
 	private static final String LIST_NOT_EXISTED = "List does not exist!";
 	private static final String TASK_ASSIGNED = "Task already assigned!";
 
-	private static Map<String, Task> tasks = new LinkedHashMap<String, Task>();
-	private static Map<String, TaskList> taskLists = new LinkedHashMap<String, TaskList>();
-	private static Map<String, User> users = new LinkedHashMap<String, User>();
+	private static Map<String, Task> tasks = new LinkedHashMap<>();
+	private static Map<String, TaskList> taskLists = new LinkedHashMap<>();
+	private static Map<String, User> users = new LinkedHashMap<>();
 
 	private static UserJDBCDAO userJdbcDao = new UserJDBCDAO();
 
-	private static String output; // a string to store all results of all methods
+	private String output; // a string to store all results of all methods
 
-	public static String getOutput() {
+	public String getOutput() {
 		return output;
 	}
 
@@ -59,7 +59,6 @@ public class DataService {
 			output += USER_EXISTED + "\n";
 			return USER_EXISTED;
 		}
-		;
 
 		User user = new User(name);
 		if (userJdbcDao.createUser(user) != 0 && userJdbcDao.isUserExists(name)) {
@@ -300,7 +299,6 @@ public class DataService {
 		List<Task> tasksInNewList = newList.getTasksInList();
 		tasksInNewList.add(task);
 		newList.setTasksInList(tasksInNewList);
-		;
 
 		if (!oldList.getTasksInList().contains(task) && newList.getTasksInList().contains(task)) {
 			output += SUCCESS + "\n";
@@ -485,7 +483,7 @@ public class DataService {
 	 */
 	public String printUsersByPerformance() {
 		String results = "";
-		List<User> userList = new ArrayList<User>();
+		List<User> userList = new ArrayList<>();
 		for (User user : users.values()) {
 			List<Task> assignedTasks = user.getAssignedTask();
 			int totalEstimatedTime = 0;
@@ -514,7 +512,7 @@ public class DataService {
 	 */
 	public String printUsersByWorkload() {
 		String results = "";
-		List<User> userList = new ArrayList<User>();
+		List<User> userList = new ArrayList<>();
 		for (User user : users.values()) {
 			List<Task> assignedTasks = user.getAssignedTask();
 			int totalEstimatedTime = 0;
@@ -541,7 +539,7 @@ public class DataService {
 	 */
 	public String printUnassignedTasksByPriority() {
 		String results = "";
-		List<Task> unassignedTasks = new ArrayList<Task>();
+		List<Task> unassignedTasks = new ArrayList<>();
 		// To find which task is unassigned
 		for (Task task : tasks.values()) {
 			if (!task.isAssigned()) {
@@ -564,7 +562,7 @@ public class DataService {
 	 */
 	public String printAllUnfinishedTasksByPriority() {
 		String results = "";
-		List<Task> unfinishedTasks = new ArrayList<Task>();
+		List<Task> unfinishedTasks = new ArrayList<>();
 		// To find which task is incomplete
 		for (Task task : tasks.values()) {
 			if (!task.isCompleted()) {

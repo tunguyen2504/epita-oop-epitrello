@@ -60,7 +60,6 @@ public class UserJDBCDAO {
 			ResultSet result = prepareStatement.executeQuery();
 			User user = new User();
 			while (result.next()) {
-				int id = result.getInt("ID");
 				String name = result.getString("USERNAME");
 				user.setName(name);
 			}
@@ -79,7 +78,7 @@ public class UserJDBCDAO {
 		try (Connection connection = getConnection()) {
 			PreparedStatement prepareStatement = connection.prepareStatement("SELECT USERNAME FROM USER");
 			ResultSet result = prepareStatement.executeQuery();
-			List<User> users = new ArrayList<User>();
+			List<User> users = new ArrayList<>();
 			while (result.next()) {
 				String name = result.getString("USERNAME");
 				User user = new User();
@@ -90,7 +89,7 @@ public class UserJDBCDAO {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return new ArrayList<User>();
+		return new ArrayList<>();
 	}
 
 	/**
@@ -104,10 +103,7 @@ public class UserJDBCDAO {
 					.prepareStatement("SELECT ID, USERNAME FROM USER WHERE USERNAME = ?");
 			prepareStatement.setString(1, userName);
 			ResultSet result = prepareStatement.executeQuery();
-			if (result.next() && result.getString("USERNAME").equals(userName)) {
-				return true;
-			}
-			return false;
+			return (result.next() && result.getString("USERNAME").equals(userName));
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
