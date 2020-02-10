@@ -11,7 +11,7 @@ public class TaskList {
 
 	private int id;
 	private String name;
-	private List<Task> tasksInList = new ArrayList<Task>();
+	private List<Task> tasksInList = new ArrayList<>();
 
 	public TaskList() {
 
