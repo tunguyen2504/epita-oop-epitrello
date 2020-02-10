@@ -7,7 +7,7 @@ import fr.epita.epitrello.datamodel.User;
 import fr.epita.epitrello.services.UserJDBCDAO;
 
 /**
- * @author Anh Tu NGUYEN & Thanh Tung TRINH - Group 2
+ * @author Anh Tu NGUYEN - Group 2 and Thanh Tung TRINH - Group 1
  *
  */
 public class TestJDBC {
