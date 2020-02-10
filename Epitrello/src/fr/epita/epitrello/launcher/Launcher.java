@@ -1,5 +1,10 @@
 package fr.epita.epitrello.launcher;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.PrintWriter;
+
 import fr.epita.epitrello.services.DataService;
 
 public class Launcher {
@@ -59,14 +64,16 @@ public class Launcher {
 		System.out.println(dataservice.printUnassignedTasksByPriority());
 
 		System.out.println(dataservice.printAllUnfinishedTasksByPriority());
-
-		System.out.println(dataservice.printUserTasks("Rabih"));
-		System.out.println(dataservice.printUserUnfinishedTasks("AmirAli"));
-		System.out.println(dataservice.printUserUnfinishedTasks("Rabih"));
-		System.out.println(dataservice.printTotalEstimatedTime());
-		System.out.println(dataservice.printTotalRemainingTime());
-		System.out.println(dataservice.userWorkLoad("Rabih"));
+		
 		// TODO Write all the prints into a file.
+		final File file = new File("../output.txt");
+		try (PrintWriter writer = new PrintWriter(new FileOutputStream(file, true));) {
+			writer.println(dataservice.getOutput());
+			writer.flush();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		
 		// TODO Save users in a db.
 	}
 

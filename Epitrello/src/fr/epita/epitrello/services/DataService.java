@@ -32,9 +32,14 @@ public class DataService {
 	private static Map<String, User> users = new LinkedHashMap<String, User>();
 
 	private static UserJDBCDAO userJdbcDao = new UserJDBCDAO();
+	private static String output;
+
+	public static String getOutput() {
+		return output;
+	}
 
 	public DataService() {
-
+		output = "";
 	}
 
 	public String addUser(String name) {
@@ -42,7 +47,7 @@ public class DataService {
 			for (User u : userJdbcDao.getAllUser()) {
 				users.putIfAbsent(u.getName(), u);
 			}
-			;
+			output += USER_EXISTED + "\n";
 			return USER_EXISTED;
 		}
 		;
@@ -52,15 +57,17 @@ public class DataService {
 			for (User u : userJdbcDao.getAllUser()) {
 				users.putIfAbsent(u.getName(), u);
 			}
-			;
+			output += SUCCESS + "\n";
 			return SUCCESS;
 		} else {
+			output += FAILED + "\n";
 			return FAILED;
 		}
 	}
 
 	public String addList(String name) {
 		if (taskLists.containsKey(name)) {
+			output += LIST_EXISTED + "\n";
 			return LIST_EXISTED;
 		}
 
@@ -68,18 +75,22 @@ public class DataService {
 		taskLists.put(name, list);
 
 		if (taskLists.containsKey(name)) {
+			output += SUCCESS + "\n";
 			return SUCCESS;
 		} else {
+			output += FAILED + "\n";
 			return FAILED;
 		}
 	}
 
 	public String addTask(String listName, String name, int estimatedTime, int priority, String description) {
 		if (tasks.containsKey(name)) {
+			output += TASK_EXISTED + "\n";
 			return TASK_EXISTED;
 		}
 
 		if (!taskLists.containsKey(listName)) {
+			output += LIST_NOT_EXISTED + "\n";
 			return LIST_NOT_EXISTED;
 		}
 
@@ -92,14 +103,17 @@ public class DataService {
 		list.setTasksInList(tasksInList);
 
 		if (tasks.containsKey(name) && taskLists.get(listName).getTasksInList().contains(task)) {
+			output += SUCCESS + "\n";
 			return SUCCESS;
 		} else {
+			output += FAILED + "\n";
 			return FAILED;
 		}
 	}
 
 	public String editTask(String name, int estimatedTime, int priority, String description) {
 		if (!tasks.containsKey(name)) {
+			output += TASK_NOT_EXISTED + "\n";
 			return TASK_NOT_EXISTED;
 		}
 
@@ -110,23 +124,28 @@ public class DataService {
 		task.setDescription(description);
 
 		if (tasks.containsKey(name) && tasks.get(name) == task) {
+			output += SUCCESS + "\n";
 			return SUCCESS;
 		} else {
+			output += FAILED + "\n";
 			return FAILED;
 		}
 	}
 
 	public String assignTask(String taskName, String userName) {
 		if (!tasks.containsKey(taskName)) {
+			output += TASK_NOT_EXISTED + "\n";
 			return TASK_NOT_EXISTED;
 		}
 
 		if (!userJdbcDao.isUserExists(userName)) {
+			output += USER_NOT_EXISTED + "\n";
 			return USER_NOT_EXISTED;
 		}
 
 		Task task = tasks.get(taskName);
 		if (task.isAssigned()) {
+			output += TASK_ASSIGNED + "\n";
 			return TASK_ASSIGNED;
 		}
 
@@ -137,14 +156,17 @@ public class DataService {
 		user.setAssignedTask(assignedTasks);
 
 		if (user.getAssignedTask().contains(task)) {
+			output += SUCCESS + "\n";
 			return SUCCESS;
 		} else {
+			output += FAILED + "\n";
 			return FAILED;
 		}
 	}
 
 	public String printTask(String taskName) {
 		if (!tasks.containsKey(taskName)) {
+			output += TASK_NOT_EXISTED + "\n";
 			return TASK_NOT_EXISTED;
 		}
 
@@ -158,17 +180,22 @@ public class DataService {
 			}
 		}
 
-		return task.getName() + "\n" + task.getDescription() + "\nPriority: " + task.getPriority()
+		String results = task.getName() + "\n" + task.getDescription() + "\nPriority: " + task.getPriority()
 				+ "\nEstimated Time: " + task.getEstimatedTime()
 				+ (assignee != null ? "\nAssigned to " + assignee : "\nUnassigned") + "\n";
+
+		output += results;
+		return results;
 	}
 
 	public String completeTask(String taskName) {
 		if (!tasks.containsKey(taskName)) {
+			output += TASK_NOT_EXISTED + "\n";
 			return TASK_NOT_EXISTED;
 		}
 
 		if (tasks.get(taskName).isCompleted()) {
+			output += "Task is already completed!" + "\n";
 			return "Task is already completed!";
 		}
 
@@ -176,18 +203,22 @@ public class DataService {
 		task.setCompleted(true);
 
 		if (task.isCompleted() && tasks.get(taskName).isCompleted()) {
+			output += SUCCESS + "\n";
 			return SUCCESS;
 		} else {
+			output += FAILED + "\n";
 			return FAILED;
 		}
 	}
 
 	public String moveTask(String taskName, String listName) {
 		if (!tasks.containsKey(taskName)) {
+			output += TASK_NOT_EXISTED + "\n";
 			return TASK_NOT_EXISTED;
 		}
 
 		if (!taskLists.containsKey(listName)) {
+			output += LIST_NOT_EXISTED + "\n";
 			return LIST_NOT_EXISTED;
 		}
 
@@ -209,14 +240,17 @@ public class DataService {
 		;
 
 		if (!oldList.getTasksInList().contains(task) && newList.getTasksInList().contains(task)) {
+			output += SUCCESS + "\n";
 			return SUCCESS;
 		} else {
+			output += FAILED + "\n";
 			return FAILED;
 		}
 	}
 
 	public String deleteTask(String name) {
 		if (!tasks.containsKey(name)) {
+			output += TASK_NOT_EXISTED + "\n";
 			return TASK_NOT_EXISTED;
 		}
 
@@ -233,14 +267,17 @@ public class DataService {
 		}
 
 		if (!tasks.containsKey(name) && !tasks.containsValue(task) && !list.getTasksInList().contains(task)) {
+			output += SUCCESS + "\n";
 			return SUCCESS;
 		} else {
+			output += FAILED + "\n";
 			return FAILED;
 		}
 	}
 
 	public String deleteList(String name) {
 		if (!taskLists.containsKey(name)) {
+			output += LIST_NOT_EXISTED + "\n";
 			return LIST_NOT_EXISTED;
 		}
 
@@ -254,14 +291,17 @@ public class DataService {
 		}
 
 		if (!taskLists.containsKey(name) && !taskLists.containsValue(list)) {
+			output += SUCCESS + "\n";
 			return SUCCESS;
 		} else {
+			output += FAILED + "\n";
 			return FAILED;
 		}
 	}
 
 	public String printList(String name) {
 		if (!taskLists.containsKey(name)) {
+			output += LIST_NOT_EXISTED + "\n";
 			return LIST_NOT_EXISTED;
 		}
 
@@ -281,6 +321,7 @@ public class DataService {
 					+ (assignee[tasksInList.indexOf(task)] != null ? assignee[tasksInList.indexOf(task)] : "Unassigned")
 					+ " | " + task.getEstimatedTime() + "h\n";
 		}
+		output += !results.equals("") ? results : (NO_RESULT + "\n");
 		return !results.equals("") ? results : NO_RESULT;
 	}
 
@@ -289,6 +330,7 @@ public class DataService {
 		for (TaskList list : taskLists.values()) {
 			results += printList(list.getName()) + "\n";
 		}
+//		output += !results.equals("") ? results : (NO_RESULT + "\n");
 		return !results.equals("") ? results : NO_RESULT;
 	}
 
@@ -302,6 +344,7 @@ public class DataService {
 			}
 			results += "\n" + user.getName() + ": " + totalEstimatedTime + "h";
 		}
+		output += !results.equals("") ? results : (NO_RESULT + "\n");
 		return !results.equals("") ? results : NO_RESULT;
 	}
 
@@ -315,8 +358,9 @@ public class DataService {
 					totalEstimatedTime += task.getEstimatedTime();
 				}
 			}
-			results += "\n" + user.getName() + ": " + totalEstimatedTime + "h";
+			results += "\n" + user.getName() + ": " + totalEstimatedTime + "h\n";
 		}
+		output += !results.equals("") ? results : (NO_RESULT + "\n");
 		return !results.equals("") ? results : NO_RESULT;
 	}
 
@@ -329,6 +373,7 @@ public class DataService {
 			totalEstimatedTime += task.getEstimatedTime();
 		}
 		results = user.getName() + ": " + totalEstimatedTime + "h\n";
+		output += results + "\n";
 		return results;
 	}
 
@@ -350,6 +395,7 @@ public class DataService {
 		for (User user : userList) {
 			results += user.getName() + "\n";
 		}
+		output += (!results.equals("") ? results : NO_RESULT) + "\n";
 		return !results.equals("") ? results : NO_RESULT;
 	}
 
@@ -369,6 +415,7 @@ public class DataService {
 		for (User user : userList) {
 			results += user.getName() + "\n";
 		}
+		output += (!results.equals("") ? results : NO_RESULT) + "\n";
 		return !results.equals("") ? results : NO_RESULT;
 	}
 
@@ -385,6 +432,7 @@ public class DataService {
 			results += task.getPriority() + " | " + task.getName() + " | " + "Unassigned | " + task.getEstimatedTime()
 					+ "h\n";
 		}
+		output += !results.equals("") ? results : (NO_RESULT + "\n");
 		return !results.equals("") ? results : NO_RESULT;
 	}
 
@@ -409,6 +457,7 @@ public class DataService {
 							: "Unassigned")
 					+ " | " + task.getEstimatedTime() + "h\n";
 		}
+		output += !results.equals("") ? results : (NO_RESULT + "\n");
 		return !results.equals("") ? results : NO_RESULT;
 	}
 
@@ -424,6 +473,7 @@ public class DataService {
 			results += task.getPriority() + " | " + task.getName() + " | " + user.getName() + " | "
 					+ task.getEstimatedTime() + "h\n";
 		}
+		output += !results.equals("") ? results : (NO_RESULT + "\n");
 		return !results.equals("") ? results : NO_RESULT;
 	}
 
@@ -441,6 +491,7 @@ public class DataService {
 						+ task.getEstimatedTime() + "h\n";
 			}
 		}
+		output += !results.equals("") ? results : (NO_RESULT + "\n");
 		return !results.equals("") ? results : NO_RESULT;
 	}
 }
